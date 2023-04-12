@@ -1,18 +1,18 @@
 import java.io.Serializable;
+import java.io.Console;
 import java.util.Random;
 
-public class Grid  implements Serializable{
+public class Grid implements Serializable {
     private Cell topLeft;
     private int rows;
     private int columns;
     private int minePercentage;
 
-    public Grid(int rows, int columns,  int minePercentage) {
+    public Grid(int rows, int columns, int minePercentage) {
         this.rows = rows;
         this.columns = columns;
         this.minePercentage = minePercentage;
         initGrid();
-        
     }
 
     public int getRows() {
@@ -38,23 +38,23 @@ public class Grid  implements Serializable{
                 }
 
                 if (j > 0) {
-                    currentCell.setNeighbor(Direction.W, previousCell);
-                    previousCell.setNeighbor(Direction.E, currentCell);
+                    currentCell.setNeighbor(Direction.LEFT, previousCell);
+                    previousCell.setNeighbor(Direction.RIGHT, currentCell);
                 }
 
                 if (i > 0) {
                     Cell aboveCell = getRowCell(previousRowStart, j);
-                    currentCell.setNeighbor(Direction.N, aboveCell);
-                    aboveCell.setNeighbor(Direction.S, currentCell);
+                    currentCell.setNeighbor(Direction.UP, aboveCell);
+                    aboveCell.setNeighbor(Direction.DOWN, currentCell);
 
                     if (j > 0) {
-                        currentCell.setNeighbor(Direction.NW, aboveCell.getNeighbor(Direction.W));
-                        aboveCell.getNeighbor(Direction.W).setNeighbor(Direction.SE, currentCell);
+                        currentCell.setNeighbor(Direction.UP_LEFT, aboveCell.getNeighbor(Direction.LEFT));
+                        aboveCell.getNeighbor(Direction.LEFT).setNeighbor(Direction.DOWN_RIGHT, currentCell);
                     }
 
                     if (j < columns - 1) {
-                        currentCell.setNeighbor(Direction.NE, aboveCell.getNeighbor(Direction.E));
-                        aboveCell.getNeighbor(Direction.E).setNeighbor(Direction.SW, currentCell);
+                        currentCell.setNeighbor(Direction.UP_RIGHT, aboveCell.getNeighbor(Direction.RIGHT));
+                        aboveCell.getNeighbor(Direction.RIGHT).setNeighbor(Direction.DOWN_LEFT, currentCell);
                     }
                 }
 
@@ -67,7 +67,7 @@ public class Grid  implements Serializable{
 
             previousRowStart = currentRowStart;
         }
-    
+
         int totalMines = rows * columns * minePercentage / 100;
         Random random = new Random();
 
@@ -87,7 +87,7 @@ public class Grid  implements Serializable{
     private Cell getRowCell(Cell rowStart, int columnIndex) {
         Cell currentCell = rowStart;
         for (int i = 0; i < columnIndex; i++) {
-            currentCell = currentCell.neighbors.get(Direction.E);
+            currentCell = currentCell.neighbors.get(Direction.RIGHT);
         }
         return currentCell;
     }
@@ -95,10 +95,10 @@ public class Grid  implements Serializable{
     public Cell getCell(int row, int col) {
         Cell currentCell = topLeft;
         for (int i = 0; i < row; i++) {
-            currentCell = currentCell.neighbors.get(Direction.S);
+            currentCell = currentCell.neighbors.get(Direction.DOWN);
         }
         for (int j = 0; j < col; j++) {
-            currentCell = currentCell.neighbors.get(Direction.E);
+            currentCell = currentCell.neighbors.get(Direction.RIGHT);
         }
         return currentCell;
     }
@@ -112,18 +112,40 @@ public class Grid  implements Serializable{
     }
 
     public void printGrid() {
+        Console console = System.console();
         Cell currentRowStart = topLeft;
+        // Afficher les coordonnées horizontales
+        console.writer().println();
+        console.writer().print("   ");
+        for (int x = 0; x < columns; x++) {
+            console.writer().print("  " + x + "  ");
+        }
+        console.writer().println();
+
         for (int i = 0; i < rows; i++) {
+            console.writer().print("   ");
+            for (int x = 0; x < columns; x++) { // Afficher la ligne horizontale supérieure
+                console.writer()
+                        .print(ANSIcodes.upLeftCorner + ANSIcodes.horizontalLine + ANSIcodes.upRightCorner);
+            }
+            console.writer().println();
+            console.writer().print("" + i + "  ");
             Cell currentCell = currentRowStart;
             for (int j = 0; j < columns; j++) {
-                System.out.print(currentCell + " ");
-                currentCell = currentCell.neighbors.get(Direction.E);
+                console.writer().print(ANSIcodes.verticalLine + currentCell + ANSIcodes.verticalLine);
+                // System.out.print(" "+currentCell + " ");
+                currentCell = currentCell.neighbors.get(Direction.RIGHT);
             }
-            System.out.println();
-            currentRowStart = currentRowStart.neighbors.get(Direction.S);
+            console.writer().println();
+            // Afficher la ligne horizontale inférieure si ce n'est pas la dernière ligne
+            console.writer().print("   ");
+            for (int x = 0; x < columns; x++) {
+
+                console.writer().print(ANSIcodes.downLeftCorner + ANSIcodes.horizontalLine + ANSIcodes.downRightCorner);
+            }
+            console.writer().println();
+            currentRowStart = currentRowStart.neighbors.get(Direction.DOWN);
+
         }
     }
 }
-
-    // Autres méthodes de la classe Grid restent inchangées, mais vous devrez les adapter pour travailler avec la structure mise à jour
-

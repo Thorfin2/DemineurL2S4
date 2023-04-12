@@ -2,6 +2,7 @@ import java.io.Serializable;
 import java.util.EnumMap;
 
 public class Cell implements Serializable {
+
     public EnumMap<Direction, Cell> neighbors;
     private boolean mine;
     private boolean marked;
@@ -36,6 +37,11 @@ public class Cell implements Serializable {
         }
     }
 
+    public boolean ismarked() {
+
+        return marked;
+    }
+
     public boolean isUncovered() {
         return uncovered;
     }
@@ -56,7 +62,7 @@ public class Cell implements Serializable {
         return true;
     }
 
-    private int getAdjacentMineCount() {
+    public int getAdjacentMineCount() {
         int count = 0;
         for (Cell neighbor : neighbors.values()) {
             if (neighbor != null && neighbor.hasMine()) {
@@ -69,14 +75,15 @@ public class Cell implements Serializable {
     @Override
     public String toString() {
         if (marked) {
-            return "⚑";
+            return " " + ANSIcodes.markedCell + " ";
         } else if (!uncovered) {
-            return "■";
+            return " " + ANSIcodes.coveredCell + " ";
         } else if (mine) {
-            return "☠";
+            return ANSIcodes.redColor + " " + ANSIcodes.mineCell + " " + ANSIcodes.resetColor;
         } else {
             int count = getAdjacentMineCount();
-            return count > 0 ? String.valueOf(count) : " ";
+            return count > 0 ? ANSIcodes.greenColor + " " + String.valueOf(count) + " " + ANSIcodes.resetColor
+                    : " " + ANSIcodes.uncoveredCell + " ";
         }
     }
 }
