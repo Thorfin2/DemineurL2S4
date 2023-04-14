@@ -2,6 +2,9 @@ import java.io.Serializable;
 import java.io.Console;
 import java.util.Random;
 
+
+// Classe représentant la grille du plateau de jeu du démineur.
+
 public class Grid implements Serializable {
     private Cell topLeft;
     private int rows;
@@ -23,6 +26,7 @@ public class Grid implements Serializable {
         return columns;
     }
 
+ // Méthode pour initialiser la grille en créant les cellules et en les reliant entre elles.
     private void initGrid() {
         Cell currentRowStart = null;
         Cell previousRowStart = null;
@@ -83,7 +87,7 @@ public class Grid implements Serializable {
             cell.setMine(true);
         }
     }
-
+// Méthode pour récupérer la cellule d'une ligne à partir de la cellule de début de ligne et de l'index de colonne.
     private Cell getRowCell(Cell rowStart, int columnIndex) {
         Cell currentCell = rowStart;
         for (int i = 0; i < columnIndex; i++) {
@@ -91,7 +95,7 @@ public class Grid implements Serializable {
         }
         return currentCell;
     }
-
+// Méthode pour récupérer une cellule de la grille à partir de ses coordonnées.
     public Cell getCell(int row, int col) {
         Cell currentCell = topLeft;
         for (int i = 0; i < row; i++) {
@@ -106,10 +110,11 @@ public class Grid implements Serializable {
     public void mark(int row, int col) {
         getCell(row, col).mark();
     }
-
+// Méthode pour découvrir une cellule de la grille à partir de ses coordonnées et retourner si elle contient une mine.
     public boolean uncover(int row, int col) {
         return getCell(row, col).uncover();
     }
+// Méthode pour afficher la grille dans la console.
 
     public void printGrid() {
         Console console = System.console();

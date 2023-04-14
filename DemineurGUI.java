@@ -7,10 +7,10 @@ import java.awt.event.WindowEvent;
 public class DemineurGUI extends JFrame implements MouseListener {
 
     public static void main(String[] args) {
-        
+        // Crée et affiche la GUI
         SwingUtilities.invokeLater(new Runnable() {
             public void run() {
-                new DemineurGUI(3, 3, 15);
+                new DemineurGUI(5, 5, 50);
             }
         });
     }
@@ -23,11 +23,12 @@ public class DemineurGUI extends JFrame implements MouseListener {
         buttons = new JButton[rows][columns];
         setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
         setTitle("Démineur");
-
+    // Initialisation des éléments de la GUI
         Container container = getContentPane();
         container.setLayout(new GridLayout(rows, columns));
         setExtendedState(MAXIMIZED_BOTH);
-
+  
+     // Création et ajout des boutons
         for (int i = 0; i < rows; i++) {
             for (int j = 0; j < columns; j++) {
                 JButton button = new JButton();
@@ -43,7 +44,7 @@ public class DemineurGUI extends JFrame implements MouseListener {
         pack();
         setVisible(true);
     }
-
+// Méthode pour mettre à jour un bouton en fonction de l'état de la cellule
     private void updateButton(JButton button, Cell cell) {
         if (cell.ismarked()) {
             button.setText(ANSIcodes.markedCell);
@@ -64,6 +65,7 @@ public class DemineurGUI extends JFrame implements MouseListener {
         }
     }
 
+    // Méthode pour afficher un message lorsque la partie est terminée    
     private void showGameoverMessage() {
         JOptionPane.showMessageDialog(this, "Game over!", "Démineur", JOptionPane.INFORMATION_MESSAGE);
         dispatchEvent(new WindowEvent(this, WindowEvent.WINDOW_CLOSING));

@@ -1,20 +1,27 @@
 import java.io.Serializable;
 import java.util.EnumMap;
 
+// Classe représentant une cellule individuelle sur le plateau de jeu du démineur.
+
 public class Cell implements Serializable {
 
-    public EnumMap<Direction, Cell> neighbors;
-    private boolean mine;
-    private boolean marked;
-    private boolean uncovered;
+    public  EnumMap<Direction, Cell> neighbors;
+    private boolean                  mine;
+    private boolean                  marked;
+    private boolean                  uncovered;
 
     public Cell() {
+
+        // EnumMap stockant les voisins de cette cellule dans chaque direction.
+
         neighbors = new EnumMap<>(Direction.class);
         mine = false;
         marked = false;
         uncovered = false;
     }
-
+    
+    // Méthodes pour définir et récupérer les voisins de la cellule.
+    
     public void setNeighbor(Direction direction, Cell neighbor) {
         neighbors.put(direction, neighbor);
     }
@@ -45,7 +52,9 @@ public class Cell implements Serializable {
     public boolean isUncovered() {
         return uncovered;
     }
-
+    
+    // Méthode pour découvrir la cellule et propager la découverte aux cellules voisines si nécessaire.
+    
     public boolean uncover() {
         if (!marked && !uncovered) {
             uncovered = true;
@@ -72,6 +81,8 @@ public class Cell implements Serializable {
         return count;
     }
 
+    // Méthode pour retourner une représentation de chaîne de caractères de la cellule en fonction de son état.
+    
     @Override
     public String toString() {
         if (marked) {
